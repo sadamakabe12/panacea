@@ -1,0 +1,55 @@
+/* Дополнительные стили для карточек дашборда */
+.dashboard-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-data-container {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.dashboard-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-card-icon img {
+  width: 24px;
+  height: 24px;
+  transition: all 0.3s ease;
+}
+
+/* Стили для различных карточек */
+.doctors-card {
+  border-left: 4px solid #0ad84f;
+}
+
+.patients-card {
+  border-left: 4px solid #4a90e2;
+}
+
+.appointments-card {
+  border-left: 4px solid #f5a623;
+}
+
+.today-card {
+  border-left: 4px solid #7ed321;
+}
+
+/* Анимация при наведении */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(10, 216, 79, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(10, 216, 79, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(10, 216, 79, 0);
+  }
+}
+

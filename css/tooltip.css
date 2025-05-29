@@ -1,0 +1,300 @@
+/**
+ * Modern professional tooltip system
+ * Inspired by design systems used by leading tech companies
+ */
+
+:root {
+    /* Основные цвета для tooltip - можно менять в соответствии с основной темой */
+    --tooltip-bg: #ffffff;
+    --tooltip-text: #333333;
+    --tooltip-accent: rgba(10, 216, 79, 0.9); /* Взят из основного цвета сайта */
+    --tooltip-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 8px 17px rgba(0, 0, 0, 0.2);
+    --tooltip-backdrop: rgba(0, 0, 0, 0.03);
+    --tooltip-border: #f0f0f0;
+    --tooltip-header-bg: rgba(10, 216, 79, 0.9);
+    
+    /* Размеры и пространство */
+    --tooltip-radius: 12px;
+    --tooltip-width: 320px;
+    --tooltip-z-index: 99999; /* Увеличиваем z-index, чтобы tooltip был гарантированно поверх всего */
+    
+    /* Анимация */
+    --tooltip-transition-speed: 0.2s;
+    --tooltip-transition-timing: cubic-bezier(0.25, 0.1, 0.25, 1.0);
+    
+    /* Позиционирование стрелки */
+    --arrow-left: 50%;
+}
+
+/* Основной контейнер для tooltip */
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Сам tooltip */
+.doctor-tooltip {
+    visibility: hidden;
+    position: fixed; /* Fixed позиционирование для корректного отображения при прокрутке */
+    z-index: var(--tooltip-z-index);
+    width: var(--tooltip-width);
+    max-width: calc(100vw - 40px);
+    background-color: var(--tooltip-bg);
+    border-radius: var(--tooltip-radius);
+    box-shadow: var(--tooltip-shadow);
+    border: 1px solid var(--tooltip-border);
+    opacity: 0;
+    transition: visibility 0s linear var(--tooltip-transition-speed),
+                opacity var(--tooltip-transition-speed) var(--tooltip-transition-timing),
+                transform var(--tooltip-transition-speed) var(--tooltip-transition-timing);
+    transform: translateY(8px) scale(0.98);
+    padding: 0;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    pointer-events: none; /* Важно: будет изменяться на 'auto' при активации */
+    will-change: transform, opacity; /* Оптимизация для анимации */
+}
+
+/* Класс для отображения tooltip сверху */
+.doctor-tooltip.position-top {
+    transform: translateY(8px) scale(0.98);
+}
+
+/* Класс для отображения tooltip снизу */
+.doctor-tooltip.position-bottom {
+    transform: translateY(-8px) scale(0.98);
+}
+
+/* Состояния активности - управляются из JavaScript */
+.doctor-tooltip.active {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: visibility 0s linear 0s,
+                opacity var(--tooltip-transition-speed) var(--tooltip-transition-timing),
+                transform var(--tooltip-transition-speed) var(--tooltip-transition-timing);
+    pointer-events: auto;
+}
+
+/* Стрелка (указатель) для tooltip сверху */
+.doctor-tooltip.position-top::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: var(--arrow-left, 50%);
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+    border-top-color: var(--tooltip-bg);
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.1));
+    z-index: 1;
+}
+
+/* Добавляем тень для стрелки tooltip сверху */
+.doctor-tooltip.position-top::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: var(--arrow-left, 50%);
+    transform: translateX(-50%);
+    border: 9px solid transparent;
+    border-top-color: var(--tooltip-border);
+    z-index: 0;
+}
+
+/* Стрелка (указатель) для tooltip снизу */
+.doctor-tooltip.position-bottom::after {
+    content: "";
+    position: absolute;
+    top: auto;
+    bottom: 100%;
+    left: var(--arrow-left, 50%);
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+    border-bottom-color: var(--tooltip-bg);
+    filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
+    z-index: 1;
+}
+
+/* Добавляем тень для стрелки tooltip снизу */
+.doctor-tooltip.position-bottom::before {
+    content: "";
+    position: absolute;
+    top: auto;
+    bottom: 100%;
+    left: var(--arrow-left, 50%);
+    transform: translateX(-50%);
+    border: 9px solid transparent;
+    border-bottom-color: var(--tooltip-border);
+    z-index: 0;
+}
+
+/* Заголовок */
+.tooltip-header {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--tooltip-text);
+    padding: 16px;
+    background-color: var(--tooltip-header-bg);
+    margin: 0;
+    border-bottom: 1px solid var(--tooltip-border);
+}
+
+/* Контейнер для контента */
+.tooltip-content {
+    padding: 16px;
+}
+
+/* Строки данных */
+.tooltip-row {
+    display: flex;
+    margin-bottom: 12px;
+    position: relative;
+    align-items: flex-start;
+}
+
+.tooltip-row:last-child {
+    margin-bottom: 0;
+}
+
+/* Стиль меток */
+.tooltip-label {
+    font-weight: 500;
+    color: #666;
+    flex-basis: 35%;
+    font-size: 13px;
+    padding-right: 10px;
+    line-height: 1.5;
+}
+
+/* Стиль значений */
+.tooltip-value {
+    color: #333;
+    flex-basis: 65%;
+    word-break: break-word;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Разделитель строк */
+.tooltip-row:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+                             transparent, 
+                             rgba(0, 0, 0, 0.05) 15%, 
+                             rgba(0, 0, 0, 0.05) 85%, 
+                             transparent);
+}
+
+/* Иконки для разных типов информации */
+.tooltip-row::before {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.7;
+}
+
+/* Специфичные иконки для разных полей */
+.tooltip-name::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z' fill='rgba(10, 216, 79, 0.9)'/%3E%3C/svg%3E");
+}
+
+.tooltip-email::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z' fill='rgba(10, 216, 79, 0.9)'/%3E%3C/svg%3E");
+}
+
+.tooltip-phone::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z' fill='rgba(10, 216, 79, 0.9)'/%3E%3C/svg%3E");
+}
+
+.tooltip-spec::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14h-2V9h-2V7h4v10z' fill='rgba(10, 216, 79, 0.9)'/%3E%3C/svg%3E");
+}
+
+/* Эффект при активном состоянии, управляемый через JavaScript */
+
+/* Анимации */
+/* Анимации для tooltip сверху */
+@keyframes tooltip-fade-in-top {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+        visibility: visible;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        visibility: visible;
+    }
+}
+
+@keyframes tooltip-fade-out-top {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        visibility: visible;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+        visibility: visible;
+    }
+}
+
+/* Анимации для tooltip снизу */
+@keyframes tooltip-fade-in-bottom {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+        visibility: visible;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        visibility: visible;
+    }
+}
+
+@keyframes tooltip-fade-out-bottom {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        visibility: visible;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+        visibility: visible;
+    }
+}
+
+/* Применяем анимации по клику с учетом позиции */
+.tooltip-container .doctor-tooltip.position-top.active {
+    animation: tooltip-fade-in-top 0.25s var(--tooltip-transition-timing) forwards;
+}
+
+.tooltip-container .doctor-tooltip.position-bottom.active {
+    animation: tooltip-fade-in-bottom 0.25s var(--tooltip-transition-timing) forwards;
+}
+
+.doctor-tooltip.position-top.hiding {
+    animation: tooltip-fade-out-top 0.2s var(--tooltip-transition-timing) forwards;
+    pointer-events: none; /* Предотвращаем взаимодействие во время анимации закрытия */
+}
+
+.doctor-tooltip.position-bottom.hiding {
+    animation: tooltip-fade-out-bottom 0.2s var(--tooltip-transition-timing) forwards;
+    pointer-events: none; /* Предотвращаем взаимодействие во время анимации закрытия */
+}
+
+/* Адаптивность оптимизирована для десктопов */

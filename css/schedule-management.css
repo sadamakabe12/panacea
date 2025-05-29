@@ -1,0 +1,886 @@
+/* Система управления расписанием - Стили */
+
+/* === ОБЩИЕ СТИЛИ === */
+.schedule-manager {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+/* === ИНФОРМАЦИЯ О ВРАЧЕ === */
+.doctor-info {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.doctor-info h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.doctor-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.doctor-contact p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.doctor-specialties p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.specialties-list {
+    margin-top: 5px;
+}
+
+/* === НАВИГАЦИЯ ПО НЕДЕЛЯМ === */
+.week-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.week-info h4 {
+    margin: 0;
+    color: #333;
+}
+
+/* === СЕТКА РАСПИСАНИЯ === */
+.schedule-grid {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.schedule-header {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.time-header, .day-header {
+    padding: 15px 8px;
+    text-align: center;
+    font-weight: 600;
+    border-right: 1px solid #dee2e6;
+}
+
+.day-header {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.day-header.today {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+    color: white;
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    border-bottom: 1px solid #dee2e6;
+}
+
+.time-slot {
+    padding: 10px 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    background: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* === ЯЧЕЙКИ РАСПИСАНИЯ === */
+.schedule-cell {
+    border-right: 1px solid #dee2e6;
+    min-height: 50px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.schedule-cell:hover {
+    background-color: #f0f8ff;
+}
+
+.schedule-cell.has-slot {
+    background-color: #e8f5e8;
+}
+
+.schedule-cell.has-appointments {
+    background-color: #fff3e0;
+}
+
+.schedule-cell-empty {
+    color: #ccc;
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+}
+
+.slot-info {
+    padding: 5px;
+    font-size: 11px;
+}
+
+.slot-status-free {
+    color: #4caf50;
+    font-weight: 600;
+    font-size: 10px;
+}
+
+/* === ТЕГИ И БЕЙДЖИ === */
+.specialty-tag {
+    background: #2196F3;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+    margin-bottom: 2px;
+    display: inline-block;
+}
+
+.appointment-count {
+    background: #ff9800;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 10px;
+}
+
+/* === МОДАЛЬНЫЕ ОКНА === */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+/* === ФОРМЫ === */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.datetime-display {
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    color: #333;
+}
+
+/* === КНОПКИ === */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 2px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: #2196F3;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1976D2;
+}
+
+.btn-success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #45a049;
+}
+
+.btn-danger {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #d32f2f;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-cancel {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #f5f5f5;
+    color: #333;
+    margin-right: 10px;
+}
+
+/* === УВЕДОМЛЕНИЯ === */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.alert-message.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.alert-message.error {
+    background-color: #f44336;
+    color: white;
+}
+
+/* === ИНФОРМАЦИОННЫЕ БЛОКИ === */
+.working-hours-info {
+    background: #fff3e0;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #e65100;
+    font-weight: 600;
+}
+
+.day-schedule-info {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.day-schedule-info h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.schedule-exception {
+    padding: 10px;
+    background-color: #ffebee;
+    border-radius: 5px;
+    border-left: 4px solid #f44336;
+}
+
+.schedule-exception p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.schedule-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.schedule-details p {
+    margin: 5px 0;
+}
+
+/* === ЗАПИСИ И НАЗНАЧЕНИЯ === */
+.appointment-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.appointment-item.scheduled {
+    border-left: 4px solid #2196F3;
+}
+
+.appointment-item.confirmed {
+    border-left: 4px solid #4CAF50;
+}
+
+.appointment-item.completed {
+    border-left: 4px solid #FF9800;
+}
+
+.appointment-card {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.appointment-card.current {
+    background-color: #fffde7;
+}
+
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.appointment-time {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+}
+
+.current-badge {
+    margin-left: 10px;
+    background-color: #ff9800;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+
+.patient-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.patient-info h4 {
+    margin: 0 0 8px 0;
+    color: #333;
+    font-size: 18px;
+}
+
+.patient-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.patient-details p {
+    margin: 2px 0;
+    color: #666;
+}
+
+.phone {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+}
+
+/* === СТАТУСЫ === */
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.status-scheduled {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status-confirmed {
+    background: #e8f5e8;
+    color: #2e7d32;
+}
+
+.status-completed {
+    background: #fff3e0;
+    color: #f57c00;
+}
+
+.status-canceled {
+    background: #ffebee;
+    color: #d32f2f;
+}
+
+.status-no-show {
+    background: #fff3e0;
+    color: #ff9800;
+}
+
+/* === ДЕЙСТВИЯ === */
+.slot-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 15px;
+}
+
+.appointment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.btn-action {
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+/* === СТАТИСТИКА === */
+.today-stats {
+    margin-bottom: 30px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.stat-card {
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.stat-card.total {
+    background-color: #e3f2fd;
+}
+
+.stat-card.confirmed {
+    background-color: #e8f5e8;
+}
+
+.stat-card.completed {
+    background-color: #f3e5f5;
+}
+
+.stat-card.no-show {
+    background-color: #fff3e0;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.stat-number.total {
+    color: #1976d2;
+}
+
+.stat-number.confirmed {
+    color: #4caf50;
+}
+
+.stat-number.completed {
+    color: #9c27b0;
+}
+
+.stat-number.no-show {
+    color: #ff9800;
+}
+
+.stat-label {
+    color: #666;
+}
+
+/* === ДОПОЛНИТЕЛЬНЫЕ ЭЛЕМЕНТЫ === */
+.no-appointments {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+}
+
+.appointments-list h3 {
+    margin-bottom: 15px;
+}
+
+.appointments-timeline {
+    margin-top: 20px;
+}
+
+.appointment-reason,
+.appointment-notes {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.appointment-reason {
+    background-color: #f0f0f0;
+}
+
+.appointment-notes {
+    background-color: #e3f2fd;
+}
+
+.appointment-reason p,
+.appointment-notes p {
+    margin: 0;
+    color: #666;
+}
+
+/* === ДОСТУПНЫЕ СЛОТЫ === */
+.available-slots {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f0f8ff;
+    border-radius: 8px;
+}
+
+.available-slots h3 {
+    margin-top: 0;
+    color: #1976d2;
+}
+
+.available-slots p {
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.slots-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.slot-time {
+    padding: 8px 12px;
+    background-color: #e3f2fd;
+    border-radius: 5px;
+    border: 1px solid #2196F3;
+}
+
+.slot-time span {
+    color: #1976d2;
+    font-weight: 500;
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 768px) {
+    .schedule-header,
+    .schedule-row {
+        grid-template-columns: 60px repeat(7, 1fr);
+    }
+    
+    .time-header,
+    .day-header,
+    .time-slot {
+        padding: 8px 4px;
+        font-size: 10px;
+    }
+    
+    .modal-content {
+        width: 90%;
+        margin: 10% auto;
+    }
+    
+    .doctor-info-grid,
+    .patient-details,
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .week-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .appointment-actions {
+        flex-direction: column;
+    }
+    
+    .btn-action {
+        text-align: center;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .schedule-manager {
+        padding: 10px;
+    }
+    
+    .schedule-header,
+    .schedule-row {
+        grid-template-columns: 50px repeat(7, 1fr);
+    }
+    
+    .schedule-cell {
+        min-height: 40px;
+    }
+    
+    .slot-info {
+        padding: 2px;
+        font-size: 9px;
+    }
+    
+    .specialty-tag,
+    .appointment-count {
+        font-size: 8px;
+        padding: 1px 3px;
+    }
+}
+
+/* === АНИМАЦИИ === */
+.schedule-cell {
+    transition: all 0.2s ease;
+}
+
+.btn {
+    transition: all 0.2s ease;
+}
+
+.appointment-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.appointment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* === УТИЛИТЫ === */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 5px; }
+.mb-2 { margin-bottom: 10px; }
+.mb-3 { margin-bottom: 15px; }
+.mb-4 { margin-bottom: 20px; }
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 5px; }
+.mt-2 { margin-top: 10px; }
+.mt-3 { margin-top: 15px; }
+.mt-4 { margin-top: 20px; }
+
+.p-0 { padding: 0; }
+.p-1 { padding: 5px; }
+.p-2 { padding: 10px; }
+.p-3 { padding: 15px; }
+.p-4 { padding: 20px; }
+
+/* === ЗАГОЛОВОК СТРАНИЦЫ === */
+.header-section {
+    display: table;
+    width: 100%;
+    border-spacing: 0;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 25px;
+}
+
+.header-left {
+    display: table-cell;
+    width: 13%;
+}
+
+.header-center {
+    display: table-cell;
+}
+
+.header-right {
+    display: table-cell;
+    width: 15%;
+}
+
+.calendar-icon {
+    display: table-cell;
+    width: 10%;
+}
+
+.back-button {
+    padding-top: 11px;
+    padding-bottom: 11px;
+    margin-left: 20px;
+    width: 125px;
+}
+
+.page-title {
+    font-size: 23px;
+    padding-left: 12px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.date-label {
+    font-size: 14px;
+    color: rgb(119, 119, 119);
+    padding: 0;
+    margin: 0;
+    text-align: right;
+}
+
+.current-date {
+    padding: 0;
+    margin: 0;
+}
+
+.calendar-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* === ИНФОРМАЦИЯ О ВРАЧЕ (дополнительные стили) === */
+.doctor-name {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.doctor-contact p,
+.doctor-specialties p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.specialties-list {
+    margin-top: 5px;
+}
+
+/* === НАВИГАЦИЯ ПО НЕДЕЛЯМ (обновленные стили) === */
+.week-info h4 {
+    margin: 0;
+    color: #333;
+}
+
+/* === ДЕНЬ НЕДЕЛИ === */
+.day-name {
+    font-size: 14px;
+}
+
+.day-number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* === СТАТУСЫ СЛОТОВ === */
+.slot-status-free {
+    color: #4caf50;
+    font-weight: 600;
+    font-size: 10px;
+}
+
+.slot-empty {
+    color: #ccc;
+    text-align: center;
+    padding: 15px;
+    font-size: 12px;
+}
+
+/* === ФОРМЫ === */
+.datetime-display {
+    padding: 8px;
+    background: #f5f5f5;
+    border-radius: 4px;
+    color: #333;
+}
+
+.form-actions {
+    text-align: right;
+    margin-top: 15px;
+}
