@@ -5,16 +5,16 @@
 
 // Настройки SMTP для отправки писем (Yandex)
 // Согласно официальной документации Yandex
-define('SMTP_HOST', 'smtp.yandex.ru'); // Сервер исходящей почты
-define('SMTP_PORT', 465); // Порт для SSL соединения
-define('SMTP_USERNAME', 'clinicpanacea'); // Полный email адрес (логин)
-define('SMTP_PASSWORD', 'eybnhyvmuvlheeok'); // ПАРОЛЬ ПРИЛОЖЕНИЯ из Яндекс ID
-define('SMTP_ENCRYPTION', 'ssl'); // Обязательно SSL для порта 465
+define('SMTP_HOST', 'smtp.gmail.com'); // Сервер исходящей почты
+define('SMTP_PORT', 587); // Порт для SSL соединения
+define('SMTP_USERNAME', 'isp-x01.kiryuhin.ei@urtt.ru'); // Полный email адрес (логин)
+define('SMTP_PASSWORD', '135168qeTTTT!'); // ПАРОЛЬ ПРИЛОЖЕНИЯ из Яндекс ID
+define('SMTP_ENCRYPTION', 'tls'); // Обязательно SSL для порта 465
 
 // Настройки отправителя
-define('FROM_EMAIL', 'clinicpanacea@yandex.com'); // Email отправителя (должен совпадать с SMTP_USERNAME)
+define('FROM_EMAIL', 'isp-x01.kiryuhin.ei@urtt.ru'); // Email отправителя (должен совпадать с SMTP_USERNAME)
 define('FROM_NAME', 'Клиника Панацея'); // Имя отправителя
-define('REPLY_TO_EMAIL', 'clinicpanacea@yandex.com'); // Email для ответов
+define('REPLY_TO_EMAIL', 'isp-x01.kiryuhin.ei@urtt.ru'); // Email для ответов
 
 // Настройки для восстановления пароля
 define('RESET_TOKEN_EXPIRY', 3600); // Время жизни токена в секундах (1 час)
