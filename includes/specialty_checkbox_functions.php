@@ -2,7 +2,14 @@
 // Проверяем, если функция уже существует, чтобы избежать повторного объявления
 if (!function_exists('popup_add_doctor_success')) {
     /**
-     * Генерирует HTML-код всплывающего окна об успешном добавлении врача
+     * Генерирует HTML-код     ob_start();
+    echo '<div id="popup1" class="overlay" style="display: block;">
+        <div class="popup">
+            <center>
+                <a class="close" href="doctors.php">&times;</a>
+                <div style="display: flex;justify-content: center;">
+                    <div class="abc">
+                        <table width="80%" class="sub-table scrolldown add-doc-form-container" border="0">'щего окна об успешном добавлении врача
      * 
      * @return string HTML-код всплывающего окна
      */
@@ -262,10 +269,27 @@ function popup_add_doctor_with_checkboxes($database, $error_1 = '0') {
                                 </form>
                         </table>
                     </div>
-                </div>
-            </center><br><br>
+                </div>            </center><br><br>
         </div>
-    </div>';
+    </div>
+    <script>
+    // Показать popup сразу при загрузке
+    document.addEventListener("DOMContentLoaded", function() {
+        const popup = document.getElementById("popup1");
+        if (popup) {
+            popup.style.display = "block";
+            popup.style.visibility = "visible";
+            popup.style.opacity = "1";
+        }
+    });
+    
+    // Закрыть popup при клике на overlay
+    document.getElementById("popup1").addEventListener("click", function(e) {
+        if (e.target === this) {
+            window.location.href = "doctors.php";
+        }
+    });
+    </script>';
     return ob_get_clean();
 }
 
@@ -302,9 +326,8 @@ function popup_edit_doctor_with_checkboxes($database, $id, $error_1 = '0') {
     }
       // Генерируем HTML для выбора специальностей с чекбоксами
     $specialty_html = generate_specialties_checkboxes($database, $doctor_specialties);
-    
-    ob_start();
-    echo '<div id="popup1" class="overlay">
+      ob_start();
+    echo '<div id="popup1" class="overlay" style="display: block;">
         <div class="popup">
         <center>
             <a class="close" href="doctors.php">&times;</a>
@@ -329,6 +352,24 @@ function popup_edit_doctor_with_checkboxes($database, $id, $error_1 = '0') {
             </table></div></div>
         </center>
         <br><br></div>
-    </div>';
+    </div>
+    <script>
+    // Показать popup сразу при загрузке
+    document.addEventListener("DOMContentLoaded", function() {
+        const popup = document.getElementById("popup1");
+        if (popup) {
+            popup.style.display = "block";
+            popup.style.visibility = "visible";
+            popup.style.opacity = "1";
+        }
+    });
+    
+    // Закрыть popup при клике на overlay
+    document.getElementById("popup1").addEventListener("click", function(e) {
+        if (e.target === this) {
+            window.location.href = "doctors.php";
+        }
+    });
+    </script>';
     return ob_get_clean();
 }

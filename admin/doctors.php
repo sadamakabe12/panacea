@@ -159,10 +159,9 @@ if (isset($_GET['action'])) {
     $id = $_GET['id'] ?? null;
     $action = $_GET['action'];
     $error_1 = $_GET["error"] ?? '0';
-    
-    if ($action === 'drop' && $id) {
+      if ($action === 'drop' && $id) {
         // Теперь используем форму для отправки POST-запроса вместо прямой ссылки
-        echo '<div id="popup1" class="overlay">
+        echo '<div id="popup1" class="overlay" style="display: block;">
             <div class="popup">
             <center>
                 <h2>Вы уверены?</h2>
@@ -179,7 +178,18 @@ if (isset($_GET['action'])) {
                 </div>
             </center>
             </div>
-        </div>';    } elseif ($action === 'edit' && $id) {
+        </div>
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const popup = document.getElementById("popup1");
+            if (popup) {
+                popup.style.display = "block";
+                popup.style.visibility = "visible";
+                popup.style.opacity = "1";
+            }
+        });
+        </script>';
+    } elseif ($action === 'edit' && $id) {
         // Показываем попап редактирования только если есть error != 4
         $error_1 = $_GET["error"] ?? '0';
         if ($error_1 != '4') {
