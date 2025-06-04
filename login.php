@@ -100,12 +100,13 @@
                     <input type="submit" value="Войти" class="login-btn btn-primary btn">
                 </td>
             </tr>
-        </div>
-            <tr>
+        </div>            <tr>
                 <td>
                     <br>
                     <label for="" class="sub-text" style="font-weight: 280;">Нет аккаунта&#63; </label>
                     <a href="signup.php" class="hover-link1 non-style-link">Зарегистрироваться</a>
+                    <br>
+                    <a href="forgot-password.php" class="hover-link1 non-style-link">Забыли пароль?</a>
                     <br><br><br>
                 </td>
             </tr>

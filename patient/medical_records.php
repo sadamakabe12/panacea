@@ -54,6 +54,35 @@ if ($record_id) {
 }
 ?>
 
+<style>
+/* Стили для вкладок медицинских записей */
+.tabs-container .tab {
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background-color: #f8f9fa !important;
+    color: #666 !important;
+}
+
+.tabs-container .tab.active {
+    background-color: #007bff !important;
+    color: white !important;
+    border-bottom: 1px solid #007bff !important;
+    font-weight: bold;
+}
+
+.tabs-container .tab:hover:not(.active) {
+    background-color: #e9ecef !important;
+    color: #333 !important;
+}
+
+.tab-content {
+    border: 1px solid #ddd;
+    border-top: none;
+    background-color: #fff;
+}
+</style>
+
 <div class="dash-body">
     <table border="0" width="100%" style="border-spacing: 0;margin:0;padding:0;margin-top:25px;">
         <tr>
@@ -122,10 +151,9 @@ if ($record_id) {
                             <h4 style="margin-top: 0;">Результаты осмотра</h4>
                             <p><?php echo nl2br(htmlspecialchars($medical_record['examination_results'])); ?></p>
                         </div>
-                    </div>
-                      <div class="tabs-container">
+                    </div>                      <div class="tabs-container">
                         <div class="tabs" style="display: flex; border-bottom: 1px solid #ddd;">
-                            <div class="tab active" data-tab="diagnoses" style="padding: 10px 20px; cursor: pointer; background-color: #f0f0f0; border-radius: 5px 5px 0 0; font-weight: bold;">Диагнозы</div>
+                            <div class="tab active" data-tab="diagnoses" style="padding: 10px 20px; cursor: pointer; border-radius: 5px 5px 0 0; font-weight: bold;">Диагнозы</div>
                             <div class="tab" data-tab="prescriptions" style="padding: 10px 20px; cursor: pointer; border-radius: 5px 5px 0 0;">Рецепты</div>
                             <div class="tab" data-tab="lab-tests" style="padding: 10px 20px; cursor: pointer; border-radius: 5px 5px 0 0;">Лабораторные тесты</div>
                             <div class="tab" data-tab="imaging-studies" style="padding: 10px 20px; cursor: pointer; border-radius: 5px 5px 0 0;">Визуальные исследования</div>
@@ -557,33 +585,61 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('.tab-content');
     
+    // Функция для установки стилей активной вкладки
+    function setActiveTab(activeTab) {
+        tabs.forEach(tab => {
+            tab.classList.remove('active');
+            tab.style.backgroundColor = '#f8f9fa';
+            tab.style.color = '#666';
+            tab.style.borderBottom = '1px solid #ddd';
+        });
+        
+        activeTab.classList.add('active');
+        activeTab.style.backgroundColor = '#007bff';
+        activeTab.style.color = 'white';
+        activeTab.style.borderBottom = '1px solid #007bff';
+    }
+    
+    // Установка начального состояния
+    if (tabs.length > 0) {
+        setActiveTab(tabs[0]); // Устанавливаем первую вкладку как активную
+    }
+    
     // Добавление обработчика событий для каждой вкладки
     tabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            // Удаление класса active у всех вкладок и контента
-            tabs.forEach(t => t.classList.remove('active'));
-            tabContents.forEach(content => content.style.display = 'none');
+            // Скрытие всего контента
+            tabContents.forEach(content => {
+                content.style.display = 'none';
+                content.classList.remove('active');
+            });
             
-            // Добавление класса active текущей вкладке
-            tab.classList.add('active');
+            // Установка активной вкладки
+            setActiveTab(tab);
             
             // Отображение соответствующего контента
             const tabId = tab.getAttribute('data-tab');
-            document.getElementById(tabId + '-content').style.display = 'block';
+            const targetContent = document.getElementById(tabId + '-content');
+            if (targetContent) {
+                targetContent.style.display = 'block';
+                targetContent.classList.add('active');
+            }
         });
     });
     
-    // Добавление стилей для вкладок
+    // Добавление эффектов при наведении
     tabs.forEach(tab => {
         tab.addEventListener('mouseover', () => {
             if (!tab.classList.contains('active')) {
-                tab.style.backgroundColor = '#e9e9e9';
+                tab.style.backgroundColor = '#e9ecef';
+                tab.style.color = '#333';
             }
         });
         
         tab.addEventListener('mouseout', () => {
             if (!tab.classList.contains('active')) {
-                tab.style.backgroundColor = '';
+                tab.style.backgroundColor = '#f8f9fa';
+                tab.style.color = '#666';
             }
         });
     });
