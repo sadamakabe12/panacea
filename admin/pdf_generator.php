@@ -1,18 +1,31 @@
 <?php
-// admin/pdf_generator.php - Класс для генерации PDF-файлов
+// admin/pdf_generator.php - Класс для генерации PDF-файлов с помощью TCPDF
+
+// Подключаем autoloader для TCPDF
+require_once(__DIR__ . '/../vendor/autoload.php');
+
+// Определяем константы TCPDF, если они не определены
+if (!defined('PDF_PAGE_ORIENTATION')) {
+    define('PDF_PAGE_ORIENTATION', 'P');
+}
+if (!defined('PDF_UNIT')) {
+    define('PDF_UNIT', 'mm');
+}
+if (!defined('PDF_PAGE_FORMAT')) {
+    define('PDF_PAGE_FORMAT', 'A4');
+}
+if (!defined('PDF_IMAGE_SCALE_RATIO')) {
+    define('PDF_IMAGE_SCALE_RATIO', 1.25);
+}
 
 class PDFGenerator {
-    private $content = '';
+    private $pdf;
     private $title = '';
-    private $pageWidth = 210; // A4 в мм
-    private $pageHeight = 297; // A4 в мм
+    private $footer = '';
     private $marginLeft = 20;
     private $marginRight = 20;
     private $marginTop = 30;
     private $marginBottom = 30;
-    private $currentY = 0;
-    private $pages = [];
-    private $footer = '';
     
     /**
      * Конструктор класса
@@ -20,20 +33,43 @@ class PDFGenerator {
      */
     public function __construct($title = 'Медицинская карта') {
         $this->title = $title;
-        $this->startNewPage();
-    }
-    
-    /**
-     * Добавляет новую страницу
-     */
-    private function startNewPage() {
-        $this->currentY = $this->marginTop;
-        $this->content = "<div style=\"font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5; position: relative; width: 100%;\">";
         
-        // Добавляем заголовок
-        $this->content .= "<div style=\"text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 20px;\">" . 
-                          htmlspecialchars($this->title) . 
-                          "</div>";
+        // Создаем новый экземпляр TCPDF
+        $this->pdf = new \TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        
+        // Устанавливаем информацию о документе
+        $this->pdf->SetCreator('Панацея МИС');
+        $this->pdf->SetAuthor('Медицинская информационная система');
+        $this->pdf->SetTitle($this->title);
+        $this->pdf->SetSubject('Медицинская карта');
+        $this->pdf->SetKeywords('медицина, карта, пациент');
+        
+        // Устанавливаем поля
+        $this->pdf->SetMargins($this->marginLeft, $this->marginTop, $this->marginRight);
+        $this->pdf->SetHeaderMargin(5);
+        $this->pdf->SetFooterMargin(10);
+        
+        // Устанавливаем автоматический разрыв страниц
+        $this->pdf->SetAutoPageBreak(TRUE, $this->marginBottom);
+        
+        // Устанавливаем коэффициент масштабирования изображений
+        $this->pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        
+        // Отключаем заголовок и футер по умолчанию
+        $this->pdf->setPrintHeader(false);
+        $this->pdf->setPrintFooter(false);
+        
+        // Устанавливаем шрифт по умолчанию
+        $this->pdf->SetFont('dejavusans', '', 11);
+        
+        // Добавляем первую страницу
+        $this->pdf->AddPage();
+        
+        // Добавляем заголовок документа
+        $this->pdf->SetFont('dejavusans', 'B', 16);
+        $this->pdf->Cell(0, 10, $this->title, 0, 1, 'C');
+        $this->pdf->Ln(5);
+        $this->pdf->SetFont('dejavusans', '', 11);
     }
     
     /**
@@ -41,9 +77,12 @@ class PDFGenerator {
      * @param string $title Заголовок раздела
      */
     public function addSection($title) {
-        $this->content .= "<div style=\"font-size: 14pt; font-weight: bold; margin-top: 15px; margin-bottom: 10px; border-bottom: 1px solid #333;\">" . 
-                          htmlspecialchars($title) . 
-                          "</div>";
+        $this->pdf->Ln(5);
+        $this->pdf->SetFont('dejavusans', 'B', 14);
+        $this->pdf->Cell(0, 8, $title, 0, 1, 'L');
+        $this->pdf->Line($this->pdf->GetX(), $this->pdf->GetY(), $this->pdf->GetX() + 170, $this->pdf->GetY());
+        $this->pdf->Ln(3);
+        $this->pdf->SetFont('dejavusans', '', 11);
     }
     
     /**
@@ -51,9 +90,10 @@ class PDFGenerator {
      * @param string $title Заголовок подраздела
      */
     public function addSubsection($title) {
-        $this->content .= "<div style=\"font-size: 12pt; font-weight: bold; margin-top: 10px; margin-bottom: 5px;\">" . 
-                          htmlspecialchars($title) . 
-                          "</div>";
+        $this->pdf->Ln(3);
+        $this->pdf->SetFont('dejavusans', 'B', 12);
+        $this->pdf->Cell(0, 6, $title, 0, 1, 'L');
+        $this->pdf->SetFont('dejavusans', '', 11);
     }
     
     /**
@@ -61,9 +101,8 @@ class PDFGenerator {
      * @param string $text Текст абзаца
      */
     public function addParagraph($text) {
-        $this->content .= "<div style=\"margin-bottom: 5px;\">" . 
-                          nl2br(htmlspecialchars($text)) . 
-                          "</div>";
+        $this->pdf->MultiCell(0, 5, $text, 0, 'L', 0, 1);
+        $this->pdf->Ln(1);
     }
     
     /**
@@ -73,77 +112,30 @@ class PDFGenerator {
     public function addFooter($text) {
         $this->footer = $text;
     }
-    
-    /**
+      /**
      * Выводит PDF-файл
+     * @param string $filename Имя файла (необязательно)
+     * @param string $mode Режим вывода: D=download, F=file, I=inline
      */
-    public function output() {
-        $this->content .= "</div>";
-        $this->pages[] = $this->content;
-        
-        $html = "<!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset=\"utf-8\">
-                    <title>" . htmlspecialchars($this->title) . "</title>
-                    <style>
-                        @page {
-                            size: A4;
-                            margin: {$this->marginTop}mm {$this->marginRight}mm {$this->marginBottom}mm {$this->marginLeft}mm;
-                        }
-                        body {
-                            font-family: Arial, sans-serif;
-                            font-size: 11pt;
-                            line-height: 1.5;
-                        }
-                        .footer {
-                            position: fixed;
-                            bottom: 10mm;
-                            width: 100%;
-                            text-align: center;
-                            font-size: 9pt;
-                            color: #777;
-                        }
-                        .page-break {
-                            page-break-after: always;
-                        }
-                    </style>
-                </head>
-                <body>";
-        
-        // Добавляем содержимое страниц
-        for ($i = 0; $i < count($this->pages); $i++) {
-            $html .= $this->pages[$i];
-            if ($i < count($this->pages) - 1) {
-                $html .= "<div class=\"page-break\"></div>";
-            }
-        }
-        
-        // Добавляем футер
+    public function output($filename = null, $mode = 'D') {
+        // Добавляем футер, если он задан
         if ($this->footer) {
-            $html .= "<div class=\"footer\">" . htmlspecialchars($this->footer) . "</div>";
+            $this->pdf->Ln(10);
+            $this->pdf->SetFont('dejavusans', 'I', 9);
+            $this->pdf->Cell(0, 5, $this->footer, 0, 1, 'C');
         }
         
-        $html .= "</body></html>";
-        
-        // Подключаем HTML-to-PDF конвертер mPDF, если он установлен
-        if (class_exists('\\Mpdf\\Mpdf')) {
-            $mpdf = new \Mpdf\Mpdf([
-                'mode' => 'utf-8',
-                'format' => 'A4',
-                'margin_left' => $this->marginLeft,
-                'margin_right' => $this->marginRight,
-                'margin_top' => $this->marginTop,
-                'margin_bottom' => $this->marginBottom
-            ]);
-            $mpdf->WriteHTML($html);
-            $mpdf->Output();
-        } else {
-            // Если mPDF не установлен, выводим HTML с соответствующими заголовками
-            // для печати в браузере
-            header('Content-Type: text/html; charset=utf-8');
-            header('Content-Disposition: inline; filename="' . $this->title . '.pdf"');
-            echo $html;
+        // Определяем имя файла
+        if (!$filename) {
+            $filename = $this->title . '.pdf';
         }
+        
+        // Для режима файла используем абсолютный путь
+        if ($mode === 'F') {
+            $filename = __DIR__ . '/../' . basename($filename);
+        }
+        
+        // Выводим PDF
+        $this->pdf->Output($filename, $mode);
     }
 }

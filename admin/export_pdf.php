@@ -7,6 +7,8 @@ error_reporting(0);
 
 include("../includes/init.php");
 require_once("../includes/medical_records_functions.php");
+require_once("../includes/patient_functions.php");
+require_once("../includes/appointment_functions.php");
 
 // Проверяем, авторизован ли пользователь как админ
 session_start();
@@ -60,6 +62,7 @@ header('Content-Type: application/pdf');
 header('Content-Disposition: attachment; filename="medical_record_' . $record_id . '.pdf"');
 
 // Создаем PDF-документ
+require_once('../vendor/autoload.php');
 require_once('pdf_generator.php');
 $pdf = new PDFGenerator("Медицинская карта #" . $record_id);
 

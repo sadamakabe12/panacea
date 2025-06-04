@@ -1,0 +1,17 @@
+{
+    "name": "panacea/medical-system",
+    "description": "Медицинская информационная система Панацея",
+    "type": "project",
+    "require": {
+        "php": ">=7.4",
+        "tecnickcom/tcpdf": "^6.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Panacea\\": "src/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

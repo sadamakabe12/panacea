@@ -7,6 +7,8 @@ error_reporting(0);
 
 include("../includes/init.php");
 require_once("../includes/medical_records_functions.php");
+require_once("../includes/patient_functions.php");
+require_once("../includes/appointment_functions.php");
 
 // Проверяем, авторизован ли пользователь как врач
 session_start();
