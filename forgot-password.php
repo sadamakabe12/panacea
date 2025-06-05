@@ -36,14 +36,13 @@
             $table_check = $database->query("SHOW TABLES LIKE 'password_reset_tokens'");
             if ($table_check->num_rows === 0) {
                 $error = '<label class="form-label" style="color:rgb(255, 62, 62);text-align:center;">Система восстановления пароля не настроена. <a href="create_password_reset_table.php">Создать таблицу</a></label>';
-            } else {
-                // Генерируем токен для сброса пароля
+            } else {                // Генерируем токен для сброса пароля
                 $reset_token = generate_reset_token();
-                $expires_at = date('Y-m-d H:i:s', time() + RESET_TOKEN_EXPIRY);
+                $expiry_seconds = RESET_TOKEN_EXPIRY; // Переменная для bind_param
                 
-                // Сохраняем токен в базе данных
-                $stmt = $database->prepare("INSERT INTO password_reset_tokens (email, token, expires_at, created_at) VALUES (?, ?, ?, NOW()) ON DUPLICATE KEY UPDATE token = VALUES(token), expires_at = VALUES(expires_at), created_at = NOW()");
-                $stmt->bind_param("sss", $email, $reset_token, $expires_at);
+                // Сохраняем токен в базе данных (используем MySQL для вычисления времени истечения)
+                $stmt = $database->prepare("INSERT INTO password_reset_tokens (email, token, expires_at, created_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL ? SECOND), NOW()) ON DUPLICATE KEY UPDATE token = VALUES(token), expires_at = VALUES(expires_at), created_at = NOW()");
+                $stmt->bind_param("ssi", $email, $reset_token, $expiry_seconds);
                 
                 if ($stmt->execute()) {
                     // Отправляем письмо

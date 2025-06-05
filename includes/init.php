@@ -15,4 +15,8 @@ require_once __DIR__ . '/doctor_functions.php';
 // Инициализация соединения с базой данных (если не инициализировано)
 if (!isset($database)) {
     $database = connect_database();
+    
+    // Устанавливаем часовой пояс MySQL равным PHP
+    $php_timezone = date_default_timezone_get();
+    $database->query("SET time_zone = '" . date('P') . "'");
 }
